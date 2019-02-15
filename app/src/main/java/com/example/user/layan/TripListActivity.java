@@ -87,14 +87,14 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
 
                 String tripId= map.get("tripId");
 
-                String countries=map.get("countries");
+           //     String countries=map.get("countries");
 
 //              String days= map.get("days");
                 /*int pin= Integer.parseInt(map.get("pin"));*/
                 int pin= 0;
                 String TripDay=map.get("TripDay");
 
-                trips.add(new Trip(name, description ));
+                trips.add(new Trip(name, description,key ));
                 tripAdapter.notifyDataSetChanged();
 
             }
@@ -154,7 +154,7 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
 
         //----------------------------------------------------THE ERROR IS HERE!!!!!!!!!!!!!!!!!----------------------------------------------------------------------------
         Intent i= new Intent(this, TripDesActivity.class);
-        //i.putExtra("trip", trips.get(position));
+        i.putExtra("trip", trips.get(position));
         startActivity(i);
         //----------------------------------------------------------------------------------------------------------------------------
 
@@ -169,6 +169,9 @@ public class TripListActivity extends AppCompatActivity implements AdapterView.O
         if (v== addNewTripIB) {
             Intent i = new Intent(this, PlanTripActivity.class);
             startActivity(i);
+
+            //Intent i2= new Intent(this, PlanDayActivity.class);
+            //i2.putExtra("key");
         }
     }
 }

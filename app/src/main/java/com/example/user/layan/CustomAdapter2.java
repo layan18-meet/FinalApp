@@ -44,14 +44,15 @@ public class CustomAdapter2 extends ArrayAdapter {
         View view = layoutInflater.inflate(R.layout.custom_row2, parent, false);
 
         //getting the view elements of the list from the view
-        ImageView imageView = view.findViewById(R.id.imageView);
+        ImageView imageView = view.findViewById(R.id.imageView2);
         TextView textViewName = view.findViewById(R.id.tripNameTV);
+
 
         //getting the hero of the specified position
         Trip trip = tripList.get(position);
 
         //adding values to the list item
-        //imageView.setImageResource(R.drawable.flag);
+        imageView.setImageResource(R.drawable.flag);
         textViewName.setText(trip.getName());
 
         //finally returning the view

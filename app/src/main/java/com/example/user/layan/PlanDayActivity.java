@@ -9,13 +9,22 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class PlanDayActivity extends AppCompatActivity implements View.OnClickListener, DialogInterface.OnClickListener {
     Button countryButton, citiesButton, addPinButton;
     EditText descriptionDay;
+    TextView countryTV, citiesTV;
+    String country = "spain", city="Paris";
+    Trip trip;
+
+    private FirebaseAuth mAuth= FirebaseAuth.getInstance();
+    FirebaseUser user= mAuth.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +36,15 @@ public class PlanDayActivity extends AppCompatActivity implements View.OnClickLi
         descriptionDay= (EditText) findViewById(R.id.descriptionDay);
         addPinButton= (Button) findViewById(R.id.addPinButton);
 
+        countryTV= (TextView) findViewById(R.id.countryTV);
+        citiesTV= (TextView) findViewById(R.id.citiesTV);
+
         countryButton.setOnClickListener(this);
         citiesButton.setOnClickListener(this);
         addPinButton.setOnClickListener(this);
+
+
+        trip = (Trip) getIntent().getSerializableExtra("trip");
 
 
     }
@@ -42,12 +57,14 @@ public class PlanDayActivity extends AppCompatActivity implements View.OnClickLi
         builder.setTitle("Choose a country");
 
         // add a radio button list
-        String[] countries = {"flag", "Spain", "France", "Portugal", "Greece", "United States", "China", "Turkey", "Germany", "South Africa", "Thailand"};
+        final String[] countries = {"flag", "Spain", "France", "Portugal", "Greece", "United States", "China", "Turkey", "Germany", "South Africa", "Thailand"};
         int checkedItem = 1; // flag
         builder.setSingleChoiceItems(countries, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // user checked an item
+                countryTV.setText(countries[which]);
+                country = countries[which];
+
             }
         });
 
@@ -72,12 +89,14 @@ public class PlanDayActivity extends AppCompatActivity implements View.OnClickLi
         builder2.setTitle("Choose a city");
 
         // add a radio button list
-        String[] cities = {"Paris", "London", "Berlin", "Tokyo", "Oslo", "Madrid", "Rome", "Jericho"};
+        final String[] cities = {"Paris", "London", "Berlin", "Tokyo", "Oslo", "Madrid", "Rome", "Jericho"};
         int checkedItem = 1; // flag
         builder2.setSingleChoiceItems(cities, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // user checked an item
+                citiesTV.setText(cities[which]);
+                city= cities[which];
             }
         });
 
@@ -99,10 +118,11 @@ public class PlanDayActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         if(v==addPinButton) {
             Intent i = new Intent(this, PlanTripActivity.class);
-            TripDay tripDay = new TripDay("country", "city", "day1", R.drawable.flag);
+            TripDay tripDay = new TripDay(country, city, descriptionDay.getText().toString(), R.drawable.flag);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference reference = database.getReference("Users");
-            reference.child("Trip").child("days").push().setValue(tripDay);
+            String UID= user.getUid();
+            DatabaseReference reference = database.getReference("Users/"+UID);
+            reference.child("Trips").child(trip.getKey()).child("days").push().setValue(tripDay);
             startActivity(i);
         }
         if(v==countryButton){

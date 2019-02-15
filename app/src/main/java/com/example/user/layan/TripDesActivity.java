@@ -32,6 +32,7 @@ public class TripDesActivity extends AppCompatActivity implements AdapterView.On
     CustomAdapter customAdapter;
 
     TextView plannedDaysTV, tripName2TV;
+    Trip trip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class TripDesActivity extends AppCompatActivity implements AdapterView.On
         customAdapter = new CustomAdapter(this, R.layout.custom_row,tripDays2);
         plannedDaysLV.setAdapter(customAdapter);
 
-        Trip trip = (Trip) getIntent().getSerializableExtra("trip");
+        trip = (Trip) getIntent().getSerializableExtra("trip");
         if(trip != null){
             tripName2TV.setText(trip.getName());
             tripDays2= trip.getDays();
@@ -99,13 +100,16 @@ public class TripDesActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Intent i= new Intent(this, PlanDayActivity.class);
+        i.putExtra("trip", trip);
+        startActivity(i);
     }
 
     @Override
     public void onClick(View v) {
         if (v== addDayToList){
             Intent i= new Intent(this, PlanDayActivity.class);
+            i.putExtra("trip", trip);
             startActivity(i);
         }
     }

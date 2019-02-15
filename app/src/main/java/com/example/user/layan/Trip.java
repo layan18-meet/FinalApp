@@ -13,6 +13,11 @@ public class Trip implements Serializable{
     private String description;
     private String key;
 
+    public Trip(String name, String description, String key) {
+        this.name= name;
+        this.description=description;
+        this.key=key;
+    }
 
     public Trip(String name, String description ){
         //   this.countries = new ArrayList<String>();
